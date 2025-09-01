@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
   Calculator,
   Home,
@@ -8,8 +6,9 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
+import React from "react";
 import { ActiveSection } from "../App";
-import logo from "../assets/logo.png";
+import neoLogo from "../assets/logo.png";
 import {
   Sidebar,
   SidebarContent,
@@ -46,8 +45,8 @@ export function DashboardSidebar({
   return (
     <Sidebar className="bg-white border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-6">
-        <div className="flex items-center justify-center">
-          <img src={logo} alt="logo" className="h-12 w-12" />
+        <div className="flex items-center justify-start">
+          <img src={neoLogo} alt="Neo Business" className="h-8 w-auto" />
         </div>
       </SidebarHeader>
 

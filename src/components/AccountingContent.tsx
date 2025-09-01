@@ -1,6 +1,13 @@
-import React from "react";
-
-import { Calculator, FileText, Plus } from "lucide-react";
+import {
+  ArrowLeft,
+  Calculator,
+  CreditCard,
+  FileBarChart,
+  FileText,
+  Plus,
+  Receipt,
+} from "lucide-react";
+import React, { useState } from "react";
 import {
   Area,
   AreaChart,
@@ -10,6 +17,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { ClientReceiptTemplate } from "./ClientReceiptTemplate";
+import { InvoiceTemplate } from "./InvoiceTemplate";
+import { ReceiptTemplate } from "./ReceiptTemplate";
+import { StatementTemplate } from "./StatementTemplate";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import {
@@ -93,6 +104,33 @@ const chartConfig = {
 };
 
 export function AccountingContent() {
+  const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+
+  if (activeTemplate) {
+    return (
+      <div className="flex flex-col">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6 bg-card">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => setActiveTemplate(null)}
+              className="text-[#26A395] hover:bg-[#26A395]/10"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Accounting
+            </Button>
+          </div>
+        </header>
+        <div className="flex-1 overflow-auto">
+          {activeTemplate === "invoice" && <InvoiceTemplate />}
+          {activeTemplate === "receipt" && <ReceiptTemplate />}
+          {activeTemplate === "statement" && <StatementTemplate />}
+          {activeTemplate === "clientReceipt" && <ClientReceiptTemplate />}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
       <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6 bg-card">
@@ -223,6 +261,52 @@ export function AccountingContent() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Document Templates */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#11254A]">Document Templates</CardTitle>
+            <CardDescription>
+              Generate professional business documents
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-4">
+              <Button
+                variant="outline"
+                className="h-20 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-2"
+                onClick={() => setActiveTemplate("invoice")}
+              >
+                <FileText className="h-6 w-6" />
+                <span>Invoice</span>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 border-[#0E9EA9] text-[#0E9EA9] hover:bg-[#0E9EA9] hover:text-white flex-col space-y-2"
+                onClick={() => setActiveTemplate("receipt")}
+              >
+                <Receipt className="h-6 w-6" />
+                <span>Receipt</span>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 border-[#11254A] text-[#11254A] hover:bg-[#11254A] hover:text-white flex-col space-y-2"
+                onClick={() => setActiveTemplate("statement")}
+              >
+                <FileBarChart className="h-6 w-6" />
+                <span>Statement</span>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-20 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-2"
+                onClick={() => setActiveTemplate("clientReceipt")}
+              >
+                <CreditCard className="h-6 w-6" />
+                <span>Client Receipt</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Invoices and Tax Reports */}
         <div className="grid gap-6 lg:grid-cols-2">
