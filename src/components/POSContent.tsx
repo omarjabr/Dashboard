@@ -1,5 +1,14 @@
-import { CreditCard, Package, Plus } from "lucide-react";
-import React from "react";
+import {
+  ArrowLeft,
+  CreditCard,
+  Package,
+  Plus,
+  Store,
+  UtensilsCrossed,
+} from "lucide-react";
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+
 import {
   Area,
   AreaChart,
@@ -10,7 +19,6 @@ import {
   YAxis,
 } from "recharts";
 import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
@@ -114,20 +122,244 @@ const inventory = [
   { item: "Sandwiches", current: 12, target: 30, status: "Critical" },
 ];
 
+const retailProducts = [
+  {
+    name: "Wireless Headphones",
+    category: "Electronics",
+    sold: 45,
+    revenue: "$2,250",
+    stock: 78,
+    price: "$50",
+  },
+  {
+    name: "Coffee Mug Set",
+    category: "Home",
+    sold: 32,
+    revenue: "$960",
+    stock: 23,
+    price: "$30",
+  },
+  {
+    name: "Smartphone Case",
+    category: "Electronics",
+    sold: 67,
+    revenue: "$1,340",
+    stock: 156,
+    price: "$20",
+  },
+  {
+    name: "Desktop Organizer",
+    category: "Office",
+    sold: 28,
+    revenue: "$840",
+    stock: 45,
+    price: "$30",
+  },
+];
+
+const fnbProducts = [
+  {
+    name: "Espresso",
+    category: "Hot Drinks",
+    sold: 145,
+    revenue: "$435",
+    stock: "Unlimited",
+    price: "$3",
+  },
+  {
+    name: "Caesar Salad",
+    category: "Salads",
+    sold: 34,
+    revenue: "$510",
+    stock: 67,
+    price: "$15",
+  },
+  {
+    name: "Chocolate Cake",
+    category: "Desserts",
+    sold: 28,
+    revenue: "$420",
+    stock: 12,
+    price: "$15",
+  },
+  {
+    name: "Avocado Toast",
+    category: "Breakfast",
+    sold: 56,
+    revenue: "$672",
+    stock: 89,
+    price: "$12",
+  },
+];
+
 const chartConfig = {
   sales: { label: "Sales", color: "#26A395" },
   transactions: { label: "Transactions", color: "#0E9EA9" },
   avg: { label: "Average", color: "#11254A" },
-  revenue: {
-    label: "Revenue",
-    color: "#0E9EA9",
-    format: (value: number) => `$${value}`,
-  },
-  sold: { label: "Sold", color: "#26A395" },
-  stock: { label: "Stock", color: "#11254A" },
 };
 
 export function POSContent() {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  if (activeSection) {
+    return (
+      <div className="flex flex-col">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6 bg-card">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => setActiveSection(null)}
+              className="text-[#26A395] hover:bg-[#26A395]/10"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to POS
+            </Button>
+            <div>
+              <h1 className="text-[#11254A] text-xl font-medium">
+                {activeSection === "retail"
+                  ? "Retail POS"
+                  : "Food & Beverage POS"}
+              </h1>
+              <p className="text-[#11254A]/70 text-sm">
+                {activeSection === "retail"
+                  ? "Physical products and merchandise"
+                  : "Restaurant and cafe operations"}
+              </p>
+            </div>
+          </div>
+        </header>
+        <div className="flex-1 overflow-auto p-6">
+          {activeSection === "retail" && (
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#11254A] flex items-center gap-2">
+                    <Store className="h-5 w-5 text-[#26A395]" />
+                    Retail Products
+                  </CardTitle>
+                  <CardDescription>
+                    Physical merchandise and products
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Product</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Sold</TableHead>
+                        <TableHead>Revenue</TableHead>
+                        <TableHead>Stock</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {retailProducts.map((product, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium text-[#11254A]">
+                            {product.name}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-[#11254A]">
+                              {product.category}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-[#26A395] font-medium">
+                            {product.price}
+                          </TableCell>
+                          <TableCell>{product.sold}</TableCell>
+                          <TableCell className="text-[#26A395] font-medium">
+                            {product.revenue}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                parseInt(product.stock.toString()) > 50
+                                  ? "default"
+                                  : parseInt(product.stock.toString()) > 25
+                                  ? "secondary"
+                                  : "destructive"
+                              }
+                            >
+                              {product.stock}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          {activeSection === "fnb" && (
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-[#11254A] flex items-center gap-2">
+                    <UtensilsCrossed className="h-5 w-5 text-[#0E9EA9]" />
+                    Food & Beverage Menu
+                  </CardTitle>
+                  <CardDescription>Restaurant and cafe items</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Item</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Sold</TableHead>
+                        <TableHead>Revenue</TableHead>
+                        <TableHead>Stock</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {fnbProducts.map((product, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium text-[#11254A]">
+                            {product.name}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-[#11254A]">
+                              {product.category}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-[#26A395] font-medium">
+                            {product.price}
+                          </TableCell>
+                          <TableCell>{product.sold}</TableCell>
+                          <TableCell className="text-[#26A395] font-medium">
+                            {product.revenue}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                product.stock === "Unlimited"
+                                  ? "default"
+                                  : parseInt(product.stock as string) > 50
+                                  ? "default"
+                                  : parseInt(product.stock as string) > 25
+                                  ? "secondary"
+                                  : "destructive"
+                              }
+                            >
+                              {product.stock}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
       <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6 bg-card">
@@ -305,7 +537,7 @@ export function POSContent() {
                       </TableCell>
                       <TableCell>{product.sold}</TableCell>
                       <TableCell className="text-[#26A395] font-medium">
-                        ${product.revenue}
+                        {product.revenue}
                       </TableCell>
                       <TableCell>
                         <Badge
@@ -366,6 +598,46 @@ export function POSContent() {
             </CardContent>
           </Card>
         </div>
+
+        {/* POS Categories */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#11254A]">POS Categories</CardTitle>
+            <CardDescription>
+              Choose your business type for specialized POS features
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Button
+                variant="outline"
+                className="h-32 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-4"
+                onClick={() => setActiveSection("retail")}
+              >
+                <Store className="h-12 w-12" />
+                <div className="text-center">
+                  <div className="font-medium">Retail POS</div>
+                  <div className="text-sm opacity-70">
+                    Physical products, inventory, SKUs
+                  </div>
+                </div>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-32 border-[#0E9EA9] text-[#0E9EA9] hover:bg-[#0E9EA9] hover:text-white flex-col space-y-4"
+                onClick={() => setActiveSection("fnb")}
+              >
+                <UtensilsCrossed className="h-12 w-12" />
+                <div className="text-center">
+                  <div className="font-medium">Food & Beverage</div>
+                  <div className="text-sm opacity-70">
+                    Restaurant, cafe, menu items
+                  </div>
+                </div>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Inventory Status */}
         <Card>

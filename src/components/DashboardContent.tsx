@@ -1,6 +1,5 @@
-import React from "react";
-
 import { Plus } from "lucide-react";
+import React from "react";
 import { FinancialCharts } from "./FinancialCharts";
 import { MetricsCards } from "./MetricsCards";
 import { QuickActions } from "./QuickActions";

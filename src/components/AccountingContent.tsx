@@ -1,11 +1,13 @@
 import {
   ArrowLeft,
+  BarChart3,
   Calculator,
-  CreditCard,
   FileBarChart,
   FileText,
   Plus,
   Receipt,
+  TrendingDown,
+  TrendingUp,
 } from "lucide-react";
 import React, { useState } from "react";
 import {
@@ -17,7 +19,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ClientReceiptTemplate } from "./ClientReceiptTemplate";
 import { InvoiceTemplate } from "./InvoiceTemplate";
 import { ReceiptTemplate } from "./ReceiptTemplate";
 import { StatementTemplate } from "./StatementTemplate";
@@ -97,6 +98,72 @@ const taxReports = [
   },
 ];
 
+const accountsPayable = [
+  {
+    vendor: "Office Supplies Co",
+    amount: "$1,250.00",
+    dueDate: "2024-02-15",
+    status: "Due",
+  },
+  {
+    vendor: "Tech Equipment Ltd",
+    amount: "$3,450.00",
+    dueDate: "2024-02-20",
+    status: "Overdue",
+  },
+  {
+    vendor: "Marketing Agency",
+    amount: "$2,800.00",
+    dueDate: "2024-02-25",
+    status: "Pending",
+  },
+  {
+    vendor: "Legal Services",
+    amount: "$1,900.00",
+    dueDate: "2024-03-01",
+    status: "Due",
+  },
+];
+
+const accountsReceivable = [
+  {
+    client: "Tech Corp Ltd",
+    amount: "$5,200.00",
+    dueDate: "2024-01-15",
+    aging: "Current",
+  },
+  {
+    client: "StartupXYZ",
+    amount: "$3,500.00",
+    dueDate: "2024-01-20",
+    aging: "1-30 days",
+  },
+  {
+    client: "Design Co",
+    amount: "$2,800.00",
+    dueDate: "2024-01-10",
+    aging: "31-60 days",
+  },
+  {
+    client: "Marketing Inc",
+    amount: "$4,200.00",
+    dueDate: "2024-01-05",
+    aging: "60+ days",
+  },
+];
+
+const trialBalanceData = [
+  { account: "Cash", debit: 25000, credit: 0, type: "Asset" },
+  { account: "Accounts Receivable", debit: 15800, credit: 0, type: "Asset" },
+  { account: "Inventory", debit: 12500, credit: 0, type: "Asset" },
+  { account: "Equipment", debit: 45000, credit: 0, type: "Asset" },
+  { account: "Accounts Payable", debit: 0, credit: 9400, type: "Liability" },
+  { account: "Loans Payable", debit: 0, credit: 25000, type: "Liability" },
+  { account: "Capital", debit: 0, credit: 50000, type: "Equity" },
+  { account: "Revenue", debit: 0, credit: 67000, type: "Revenue" },
+  { account: "Expenses", debit: 53100, credit: 0, type: "Expense" },
+];
+
 const chartConfig = {
   revenue: { label: "Revenue", color: "#26A395" },
   expenses: { label: "Expenses", color: "#0E9EA9" },
@@ -105,6 +172,7 @@ const chartConfig = {
 
 export function AccountingContent() {
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [activeReport, setActiveReport] = useState<string | null>(null);
 
   if (activeTemplate) {
     return (
@@ -125,7 +193,211 @@ export function AccountingContent() {
           {activeTemplate === "invoice" && <InvoiceTemplate />}
           {activeTemplate === "receipt" && <ReceiptTemplate />}
           {activeTemplate === "statement" && <StatementTemplate />}
-          {activeTemplate === "clientReceipt" && <ClientReceiptTemplate />}
+        </div>
+      </div>
+    );
+  }
+
+  if (activeReport) {
+    return (
+      <div className="flex flex-col">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6 bg-card">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => setActiveReport(null)}
+              className="text-[#26A395] hover:bg-[#26A395]/10"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Accounting
+            </Button>
+            <div>
+              <h1 className="text-[#11254A] text-xl font-medium">
+                {activeReport === "payable"
+                  ? "Accounts Payable Report"
+                  : activeReport === "receivable"
+                  ? "Accounts Receivable Report"
+                  : "Trial Balance Report"}
+              </h1>
+              <p className="text-[#11254A]/70 text-sm">
+                {activeReport === "payable"
+                  ? "Outstanding vendor payments"
+                  : activeReport === "receivable"
+                  ? "Outstanding customer invoices"
+                  : "General ledger account balances"}
+              </p>
+            </div>
+          </div>
+        </header>
+        <div className="flex-1 overflow-auto p-6">
+          {activeReport === "payable" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-[#11254A] flex items-center gap-2">
+                  <TrendingDown className="h-5 w-5 text-[#11254A]" />
+                  Accounts Payable Summary
+                </CardTitle>
+                <CardDescription>
+                  Outstanding payments to vendors
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Vendor</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Due Date</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {accountsPayable.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium text-[#11254A]">
+                          {item.vendor}
+                        </TableCell>
+                        <TableCell className="text-[#11254A] font-medium">
+                          {item.amount}
+                        </TableCell>
+                        <TableCell>{item.dueDate}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              item.status === "Due"
+                                ? "default"
+                                : item.status === "Overdue"
+                                ? "destructive"
+                                : "secondary"
+                            }
+                          >
+                            {item.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+          {activeReport === "receivable" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-[#11254A] flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-[#26A395]" />
+                  Accounts Receivable Summary
+                </CardTitle>
+                <CardDescription>
+                  Outstanding invoices from customers
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Due Date</TableHead>
+                      <TableHead>Aging</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {accountsReceivable.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium text-[#11254A]">
+                          {item.client}
+                        </TableCell>
+                        <TableCell className="text-[#26A395] font-medium">
+                          {item.amount}
+                        </TableCell>
+                        <TableCell>{item.dueDate}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              item.aging === "Current"
+                                ? "default"
+                                : item.aging === "60+ days"
+                                ? "destructive"
+                                : "secondary"
+                            }
+                          >
+                            {item.aging}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+          {activeReport === "trial" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-[#11254A] flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-[#0E9EA9]" />
+                  Trial Balance
+                </CardTitle>
+                <CardDescription>
+                  All account balances as of {new Date().toLocaleDateString()}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Account</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead className="text-right">Debit</TableHead>
+                      <TableHead className="text-right">Credit</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {trialBalanceData.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium text-[#11254A]">
+                          {item.account}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="text-[#11254A]">
+                            {item.type}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right text-[#26A395] font-medium">
+                          {item.debit > 0
+                            ? `${item.debit.toLocaleString()}`
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="text-right text-[#0E9EA9] font-medium">
+                          {item.credit > 0
+                            ? `${item.credit.toLocaleString()}`
+                            : "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    <TableRow className="bg-[#F1F2F4]/50 font-bold">
+                      <TableCell colSpan={2} className="text-[#11254A]">
+                        TOTALS
+                      </TableCell>
+                      <TableCell className="text-right text-[#26A395]">
+                        $
+                        {trialBalanceData
+                          .reduce((sum, item) => sum + item.debit, 0)
+                          .toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-right text-[#0E9EA9]">
+                        $
+                        {trialBalanceData
+                          .reduce((sum, item) => sum + item.credit, 0)
+                          .toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     );
@@ -262,51 +534,86 @@ export function AccountingContent() {
           </Card>
         </div>
 
-        {/* Document Templates */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-[#11254A]">Document Templates</CardTitle>
-            <CardDescription>
-              Generate professional business documents
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-4">
-              <Button
-                variant="outline"
-                className="h-20 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-2"
-                onClick={() => setActiveTemplate("invoice")}
-              >
-                <FileText className="h-6 w-6" />
-                <span>Invoice</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 border-[#0E9EA9] text-[#0E9EA9] hover:bg-[#0E9EA9] hover:text-white flex-col space-y-2"
-                onClick={() => setActiveTemplate("receipt")}
-              >
-                <Receipt className="h-6 w-6" />
-                <span>Receipt</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 border-[#11254A] text-[#11254A] hover:bg-[#11254A] hover:text-white flex-col space-y-2"
-                onClick={() => setActiveTemplate("statement")}
-              >
-                <FileBarChart className="h-6 w-6" />
-                <span>Statement</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-2"
-                onClick={() => setActiveTemplate("clientReceipt")}
-              >
-                <CreditCard className="h-6 w-6" />
-                <span>Client Receipt</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Document Templates and Reports */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#11254A]">
+                Document Templates
+              </CardTitle>
+              <CardDescription>
+                Generate professional business documents
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Button
+                  variant="outline"
+                  className="h-20 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-2"
+                  onClick={() => setActiveTemplate("invoice")}
+                >
+                  <FileText className="h-6 w-6" />
+                  <span>Invoice</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-20 border-[#0E9EA9] text-[#0E9EA9] hover:bg-[#0E9EA9] hover:text-white flex-col space-y-2"
+                  onClick={() => setActiveTemplate("receipt")}
+                >
+                  <Receipt className="h-6 w-6" />
+                  <span>Receipt</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-20 border-[#11254A] text-[#11254A] hover:bg-[#11254A] hover:text-white flex-col space-y-2"
+                  onClick={() => setActiveTemplate("statement")}
+                >
+                  <FileBarChart className="h-6 w-6" />
+                  <span>Statement</span>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#11254A]">
+                Financial Reports
+              </CardTitle>
+              <CardDescription>
+                Detailed accounting analysis and reports
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-3">
+                <Button
+                  variant="outline"
+                  className="h-20 border-[#11254A] text-[#11254A] hover:bg-[#11254A] hover:text-white flex-col space-y-2"
+                  onClick={() => setActiveReport("payable")}
+                >
+                  <TrendingDown className="h-6 w-6" />
+                  <span>Accounts Payable</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-20 border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white flex-col space-y-2"
+                  onClick={() => setActiveReport("receivable")}
+                >
+                  <TrendingUp className="h-6 w-6" />
+                  <span>Accounts Receivable</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-20 border-[#0E9EA9] text-[#0E9EA9] hover:bg-[#0E9EA9] hover:text-white flex-col space-y-2"
+                  onClick={() => setActiveReport("trial")}
+                >
+                  <BarChart3 className="h-6 w-6" />
+                  <span>Trial Balance</span>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Invoices and Tax Reports */}
         <div className="grid gap-6 lg:grid-cols-2">

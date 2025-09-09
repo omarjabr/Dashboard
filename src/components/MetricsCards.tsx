@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -8,6 +6,7 @@ import {
   TrendingUp,
   Wallet,
 } from "lucide-react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const metrics = [

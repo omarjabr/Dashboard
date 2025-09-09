@@ -1,7 +1,25 @@
+import {
+  Award,
+  Calendar,
+  Clock,
+  DollarSign,
+  FileText,
+  Plus,
+  Users,
+} from "lucide-react";
 import React from "react";
-
-import { Calendar, Clock, Plus, Users } from "lucide-react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import {
@@ -105,10 +123,88 @@ const departments = [
   { name: "Sales", employees: 5, budget: 300000, utilization: 92 },
 ];
 
+const attendanceData = [
+  { month: "Jan", present: 92, absent: 5, late: 3 },
+  { month: "Feb", present: 89, absent: 7, late: 4 },
+  { month: "Mar", present: 94, absent: 4, late: 2 },
+  { month: "Apr", present: 91, absent: 6, late: 3 },
+  { month: "May", present: 93, absent: 4, late: 3 },
+  { month: "Jun", present: 95, absent: 3, late: 2 },
+];
+
+const lifecycleData = [
+  { stage: "Recruitment", count: 8, color: "#26A395" },
+  { stage: "Onboarding", count: 3, color: "#0E9EA9" },
+  { stage: "Active", count: 18, color: "#11254A" },
+  { stage: "Performance Review", count: 6, color: "#F1F2F4" },
+  { stage: "Exit Process", count: 1, color: "#26A395" },
+];
+
+const payrollDetails = [
+  {
+    department: "Engineering",
+    employees: 8,
+    totalSalary: 85000,
+    avgSalary: 10625,
+    benefits: 8500,
+  },
+  {
+    department: "Design",
+    employees: 4,
+    totalSalary: 70000,
+    avgSalary: 17500,
+    benefits: 7000,
+  },
+  {
+    department: "Marketing",
+    employees: 3,
+    totalSalary: 75000,
+    avgSalary: 25000,
+    benefits: 7500,
+  },
+  {
+    department: "Sales",
+    employees: 5,
+    totalSalary: 60000,
+    avgSalary: 12000,
+    benefits: 6000,
+  },
+];
+
+const performanceData = [
+  {
+    employee: "John Smith",
+    department: "Engineering",
+    score: 92,
+    status: "Excellent",
+  },
+  {
+    employee: "Sarah Johnson",
+    department: "Design",
+    score: 88,
+    status: "Good",
+  },
+  {
+    employee: "Mike Davis",
+    department: "Marketing",
+    score: 85,
+    status: "Good",
+  },
+  {
+    employee: "Lisa Chen",
+    department: "Sales",
+    score: 94,
+    status: "Excellent",
+  },
+];
+
 const chartConfig = {
   salary: { label: "Salary", color: "#26A395" },
   benefits: { label: "Benefits", color: "#0E9EA9" },
   taxes: { label: "Taxes", color: "#11254A" },
+  present: { label: "Present", color: "#26A395" },
+  absent: { label: "Absent", color: "#11254A" },
+  late: { label: "Late", color: "#0E9EA9" },
 };
 
 export function HRContent() {
@@ -128,6 +224,13 @@ export function HRContent() {
           <Button
             variant="outline"
             className="border-[#26A395] text-[#26A395] hover:bg-[#26A395] hover:text-white"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Reports
+          </Button>
+          <Button
+            variant="outline"
+            className="border-[#0E9EA9] text-[#0E9EA9] hover:bg-[#0E9EA9] hover:text-white"
           >
             <Calendar className="h-4 w-4 mr-2" />
             Time Off
@@ -194,7 +297,7 @@ export function HRContent() {
           </Card>
         </div>
 
-        {/* Charts */}
+        {/* Charts Row 1 */}
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
@@ -222,6 +325,79 @@ export function HRContent() {
                     />
                     <Bar dataKey="taxes" fill="#11254A" radius={[4, 4, 0, 0]} />
                   </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#11254A]">
+                Attendance Tracking
+              </CardTitle>
+              <CardDescription>Monthly attendance patterns</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig} className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={attendanceData}>
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Line
+                      type="monotone"
+                      dataKey="present"
+                      stroke="#26A395"
+                      strokeWidth={3}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="absent"
+                      stroke="#11254A"
+                      strokeWidth={2}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="late"
+                      stroke="#0E9EA9"
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Row 2 */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-[#11254A]">
+                Employee Lifecycle
+              </CardTitle>
+              <CardDescription>
+                Current employee status distribution
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig} className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={lifecycleData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      dataKey="count"
+                    >
+                      {lifecycleData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                  </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
@@ -262,58 +438,96 @@ export function HRContent() {
           </Card>
         </div>
 
-        {/* Employees and Time Off */}
+        {/* Payroll Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#11254A] flex items-center gap-2">
+              <DollarSign className="h-5 w-5 text-[#26A395]" />
+              Detailed Payroll Analysis
+            </CardTitle>
+            <CardDescription>Department-wise payroll breakdown</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Employees</TableHead>
+                  <TableHead>Total Salary</TableHead>
+                  <TableHead>Avg Salary</TableHead>
+                  <TableHead>Benefits</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {payrollDetails.map((dept, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium text-[#11254A]">
+                      {dept.department}
+                    </TableCell>
+                    <TableCell>{dept.employees}</TableCell>
+                    <TableCell className="text-[#26A395] font-medium">
+                      ${dept.totalSalary.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-[#0E9EA9] font-medium">
+                      ${dept.avgSalary.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-[#11254A] font-medium">
+                      ${dept.benefits.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        {/* Employee Performance and Time Off */}
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-[#11254A]">
-                Employee Directory
+              <CardTitle className="text-[#11254A] flex items-center gap-2">
+                <Award className="h-5 w-5 text-[#26A395]" />
+                Employee Performance
               </CardTitle>
-              <CardDescription>Current team members</CardDescription>
+              <CardDescription>
+                Recent performance review scores
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {employees.map((employee) => (
-                    <TableRow key={employee.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-[#26A395]" />
-                          <div>
-                            <p className="font-medium text-[#11254A]">
-                              {employee.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {employee.salary}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{employee.department}</TableCell>
-                      <TableCell>{employee.position}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            employee.status === "Active"
-                              ? "default"
-                              : "secondary"
-                          }
-                        >
-                          {employee.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="space-y-4">
+                {performanceData.map((employee, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Users className="h-5 w-5 text-[#26A395]" />
+                      <div>
+                        <p className="font-medium text-[#11254A]">
+                          {employee.employee}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {employee.department}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium text-[#26A395]">
+                        {employee.score}/100
+                      </p>
+                      <Badge
+                        variant={
+                          employee.status === "Excellent"
+                            ? "default"
+                            : "secondary"
+                        }
+                      >
+                        {employee.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
 
@@ -364,6 +578,63 @@ export function HRContent() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Employee Directory */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-[#11254A] flex items-center gap-2">
+              <Users className="h-5 w-5 text-[#26A395]" />
+              Employee Directory
+            </CardTitle>
+            <CardDescription>Complete team member information</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Salary</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {employees.map((employee) => (
+                  <TableRow key={employee.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Users className="h-4 w-4 text-[#26A395]" />
+                        <div>
+                          <p className="font-medium text-[#11254A]">
+                            {employee.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {employee.id}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{employee.department}</TableCell>
+                    <TableCell>{employee.position}</TableCell>
+                    <TableCell className="text-[#26A395] font-medium">
+                      {employee.salary}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          employee.status === "Active" ? "default" : "secondary"
+                        }
+                      >
+                        {employee.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

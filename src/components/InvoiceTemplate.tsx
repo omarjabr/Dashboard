@@ -2,6 +2,8 @@ import {
   Banknote,
   Building,
   Calendar,
+  CheckCircle,
+  Clock,
   CreditCard,
   Download,
   Mail,
@@ -10,8 +12,9 @@ import {
   Printer,
   QrCode,
   Wallet,
+  XCircle,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import neoLogo from "../assets/logo.png";
 
 import { Button } from "./ui/button";
@@ -42,6 +45,34 @@ const tax = subtotal * 0.1; // 10% tax
 const total = subtotal + tax;
 
 export function InvoiceTemplate() {
+  const [status, setStatus] = useState<"unpaid" | "paid" | "overdue">("unpaid");
+
+  const getStatusIcon = () => {
+    switch (status) {
+      case "paid":
+        return <CheckCircle className="h-5 w-5 text-green-600" />;
+      case "overdue":
+        return <XCircle className="h-5 w-5 text-red-600" />;
+      default:
+        return <Clock className="h-5 w-5 text-orange-500" />;
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (status) {
+      case "paid":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "overdue":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-orange-100 text-orange-800 border-orange-200";
+    }
+  };
+
+  const handlePayNow = () => {
+    setStatus("paid");
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">
       {/* Header */}
@@ -65,10 +96,31 @@ export function InvoiceTemplate() {
         </div>
       </div>
 
-      {/* Invoice Title */}
+      {/* Invoice Title and Status */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-[#26A395] mb-2">INVOICE</h2>
-        <p className="text-[#11254A]/70">Invoice #INV-001</p>
+        <p className="text-[#11254A]/70 mb-4">Invoice #INV-001</p>
+
+        {/* Status Badge */}
+        <div className="flex justify-center items-center gap-2 mb-4">
+          <div
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${getStatusColor()}`}
+          >
+            {getStatusIcon()}
+            <span className="font-medium capitalize">{status}</span>
+          </div>
+        </div>
+
+        {/* Pay Now Button - Only show if unpaid or overdue */}
+        {status !== "paid" && (
+          <Button
+            onClick={handlePayNow}
+            className="bg-[#26A395] hover:bg-[#26A395]/90 text-white"
+          >
+            <CreditCard className="h-4 w-4 mr-2" />
+            Pay Now
+          </Button>
+        )}
       </div>
 
       {/* Bill To and From Section */}
