@@ -40,7 +40,6 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-
 const payrollData = [
   { month: "Jan", salary: 45000, benefits: 8000, taxes: 12000 },
   { month: "Feb", salary: 47000, benefits: 8200, taxes: 12500 },
@@ -133,11 +132,11 @@ const attendanceData = [
 ];
 
 const lifecycleData = [
-  { stage: "Recruitment", count: 8, color: "#26A395" },
-  { stage: "Onboarding", count: 3, color: "#0E9EA9" },
-  { stage: "Active", count: 18, color: "#11254A" },
-  { stage: "Performance Review", count: 6, color: "#F1F2F4" },
-  { stage: "Exit Process", count: 1, color: "#26A395" },
+  { name: "Recruitment", count: 8, color: "#26A395" },
+  { name: "Onboarding", count: 3, color: "#0E9EA9" },
+  { name: "Active", count: 18, color: "#11254A" },
+  { name: "Performance Review", count: 6, color: "#F1F2F4" },
+  { name: "Exit Process", count: 1, color: "#26A395" },
 ];
 
 const payrollDetails = [
@@ -307,9 +306,12 @@ export function HRContent() {
               <CardDescription>Monthly payroll costs</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[280px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={payrollData}>
+                  <BarChart
+                    data={payrollData}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                  >
                     <XAxis dataKey="month" />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
@@ -338,9 +340,12 @@ export function HRContent() {
               <CardDescription>Monthly attendance patterns</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[280px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={attendanceData}>
+                  <LineChart
+                    data={attendanceData}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                  >
                     <XAxis dataKey="month" />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
@@ -381,15 +386,15 @@ export function HRContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                     <Pie
                       data={lifecycleData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
+                      innerRadius={50}
+                      outerRadius={80}
                       dataKey="count"
                     >
                       {lifecycleData.map((entry, index) => (
@@ -400,6 +405,20 @@ export function HRContent() {
                   </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>
+              <div className="flex flex-wrap gap-4 mt-4">
+                {lifecycleData.map((entry, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    />
+                    <span className="text-sm text-[#11254A]">{entry.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      ({entry.count})
+                    </span>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
 

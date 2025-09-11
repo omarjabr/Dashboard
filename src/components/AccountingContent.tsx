@@ -482,7 +482,7 @@ export function AccountingContent() {
               <CardDescription>Monthly financial performance</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[300px]w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={revenueData}>
                     <XAxis dataKey="month" />
@@ -516,7 +516,7 @@ export function AccountingContent() {
               <CardDescription>Net profit breakdown</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[600px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={revenueData}>
                     <XAxis dataKey="month" />

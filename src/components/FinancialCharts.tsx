@@ -59,9 +59,12 @@ export function FinancialCharts() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
+          <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={revenueData}>
+              <AreaChart
+                data={revenueData}
+                margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+              >
                 <XAxis dataKey="month" />
                 <YAxis />
                 <ChartTooltip content={<ChartTooltipContent />} />
@@ -94,15 +97,15 @@ export function FinancialCharts() {
             <CardDescription>Current month distribution</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[200px]">
+            <ChartContainer config={chartConfig} className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                   <Pie
                     data={expenseBreakdown}
                     cx="50%"
                     cy="50%"
-                    innerRadius={40}
-                    outerRadius={80}
+                    innerRadius={35}
+                    outerRadius={70}
                     dataKey="value"
                   >
                     {expenseBreakdown.map((entry, index) => (
@@ -113,6 +116,20 @@ export function FinancialCharts() {
                 </PieChart>
               </ResponsiveContainer>
             </ChartContainer>
+            <div className="flex flex-wrap gap-3 mt-4">
+              {expenseBreakdown.map((entry, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  <span className="text-sm text-[#11254A]">{entry.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    (${entry.value.toLocaleString()})
+                  </span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
@@ -122,9 +139,12 @@ export function FinancialCharts() {
             <CardDescription>Net profit over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[200px]">
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={revenueData}>
+                <LineChart
+                  data={revenueData}
+                  margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                >
                   <XAxis dataKey="month" />
                   <YAxis />
                   <ChartTooltip content={<ChartTooltipContent />} />

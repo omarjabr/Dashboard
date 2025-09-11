@@ -587,9 +587,12 @@ export function CRMContent() {
               <CardDescription>Monthly leads and conversions</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[280px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={salesData}>
+                  <LineChart
+                    data={salesData}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                  >
                     <XAxis dataKey="month" />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
@@ -617,15 +620,18 @@ export function CRMContent() {
               <CardDescription>Where your leads come from</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer
+                config={chartConfig}
+                className="h-[300px] w-[400px]"
+              >
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                     <Pie
                       data={leadSources}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
+                      innerRadius={50}
+                      outerRadius={80}
                       dataKey="value"
                     >
                       {leadSources.map((entry, index) => (
@@ -636,6 +642,20 @@ export function CRMContent() {
                   </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>
+              <div className="flex flex-wrap gap-4 mt-4">
+                {leadSources.map((entry, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    />
+                    <span className="text-sm text-[#11254A]">{entry.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      ({entry.value}%)
+                    </span>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>
