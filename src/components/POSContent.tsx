@@ -456,7 +456,7 @@ export function POSContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={salesData}>
                     <XAxis dataKey="day" />
@@ -484,7 +484,7 @@ export function POSContent() {
               <CardDescription>Top selling items this week</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={topProducts}>
                     <XAxis dataKey="name" />
